@@ -1,0 +1,38 @@
+version: '3.1'
+services:
+  geoserver:
+    restart: always
+    image: kartoza/geoserver
+    container_name: geoserver
+    ports:
+      - 8888:8080
+    volumes:
+      - ./geoserver-data:/opt/geoserver/data_dir
+
+  postgis:
+    restart: always
+    image: kartoza/postgis
+    container_name: postgis
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: hawk
+      POSTGRES_PASSWORD: 123456
+    volumes:
+      - ./postgis-data:/var/lib/postgresql/data
+
+  pgadmin4:
+    restart: always
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    ports:
+      - 8090:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: hawk@XXXX.com
+      PGADMIN_DEFAULT_PASSWORD: 123456
+
+  nginx:
+    build: mapboxStaticFile
+    restart: always
+    ports:
+      - 8017:8081
